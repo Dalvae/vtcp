@@ -72,10 +72,14 @@ class Vtcp:
 
         recognizer.recognizing.connect(recognizing_handler)
 
-        #play sound to star talking
+        # Iniciar el reconocimiento antes de reproducir el sonido
+        recognition_task = recognizer.recognize_once_async()
+
+        # Reproducir el sonido justo antes de esperar el resultado
         self.play_sound()
+
         try:
-            result = recognizer.recognize_once_async().get()
+            result = recognition_task.get()
             
             if result.reason == speechsdk.ResultReason.RecognizedSpeech:
                 pyperclip.copy(result.text)
